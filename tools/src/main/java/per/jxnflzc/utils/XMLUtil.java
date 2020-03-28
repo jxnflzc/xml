@@ -5,15 +5,6 @@ import org.w3c.dom.*;
 import java.io.*;
 
 public class XMLUtil {
-    private int MAJOR = 0;
-    private int MINOR = 1;
-    private int BUILD = 1;
-    private Version version = new Version(MAJOR, MINOR, BUILD);
-
-    public String getVersion(){
-        return this.version.toString();
-    }
-
     public static Object getBean(String path, String filename, String tagName) {
         try {
             DocumentBuilderFactory dFactory = DocumentBuilderFactory.newInstance();
