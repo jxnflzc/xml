@@ -10,14 +10,24 @@ public class ClassDiagram {
     private String parentName;
     private int dit;
     private int cbo;
+    private int noc;
     private List<String> attributes;
-    private List<String> operations;
+    private List<Operation> operations;
 
     public ClassDiagram() {
         this.dit = 0;
         this.cbo = 0;
+        this.noc = 0;
         this.attributes = new ArrayList<>();
         this.operations = new ArrayList<>();
+    }
+
+    public int getNoc() {
+        return noc;
+    }
+
+    public void setNoc(int noc) {
+        this.noc = noc;
     }
 
     public int getCbo() {
@@ -76,12 +86,16 @@ public class ClassDiagram {
         this.attributes.add(attribute);
     }
 
-    public List<String> getOperations() {
+    public List<Operation> getOperations() {
         return operations;
     }
 
-    public void addOperation(String operation) {
+    public void addOperation(Operation operation) {
         this.operations.add(operation);
+    }
+
+    public void setOperation(int index, Operation operation) {
+        this.operations.set(index, operation);
     }
 
     @Override
@@ -90,6 +104,7 @@ public class ClassDiagram {
         result += "\n\tId: " + this.id;
         result += "\n\tDIT: " + this.dit;
         result += "\n\tCBO: " + this.cbo;
+        result += "\n\tNOC: " + this.noc;
         result += "\n\tParentId: " + this.parentId;
         result += "\n\tParentName: " + this.parentName;
 
@@ -98,7 +113,7 @@ public class ClassDiagram {
         }
 
         for (int i = 0; i < this.operations.size(); i++) {
-            result += "\n\tOperation: " + this.operations.get(i);
+            result += "\n\tOperation: " + this.operations.get(i).toString();
         }
         return  result;
     }

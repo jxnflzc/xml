@@ -59,17 +59,25 @@ public class XMLUtil {
 
     public static ClassDiagram operation(NodeList nodeList, ClassDiagram cd) {
         for (int i = 0; i < nodeList.getLength(); i++) {
-            Node attribute = nodeList.item(i);
-            if (attribute.getNodeType() == Node.ELEMENT_NODE) {
-                NodeList attributeChild = attribute.getChildNodes();
-                for (int j = 0; j < attributeChild.getLength(); j++) {
-                    Node node = attributeChild.item(j);
+            Node operation = nodeList.item(i);
+            if (operation.getNodeType() == Node.ELEMENT_NODE) {
+                NodeList operationChild = operation.getChildNodes();
+
+
+                Operation op = new Operation();
+                for (int j = 0; j < operationChild.getLength(); j++) {
+                    Node node = operationChild.item(j);
                     switch (node.getNodeName()) {
                         case "a:Name":
-                            cd.addOperation(node.getFirstChild().getNodeValue());
+                            op.setName(node.getFirstChild().getNodeValue());
+                            cd.addOperation(op);
                             break;
                         case "a:ReturnType":
                             //System.out.println("\tReturnType: " + node.getFirstChild().getNodeValue());
+                            break;
+                        case "c:Parameters":
+                            op = parameter(node.getChildNodes(), op);
+                            cd.setOperation(cd.getOperations().size() - 1, op);
                             break;
                         default:
                             break;
@@ -78,6 +86,27 @@ public class XMLUtil {
             }
         }
         return cd;
+    }
+
+    public static Operation parameter(NodeList nodeList, Operation operation) {
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node parameter = nodeList.item(i);
+            if (parameter.getNodeType() == Node.ELEMENT_NODE) {
+                NodeList parameterChild = parameter.getChildNodes();
+
+                for (int j = 0; j < parameterChild.getLength(); j++) {
+                    Node node = parameterChild.item(j);
+                    switch (node.getNodeName()) {
+                        case "a:Name":
+                            operation.addParameters(node.getFirstChild().getNodeValue());
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+        return operation;
     }
 
     public static List<ClassDiagram> getClass(Document doc, List<ClassDiagram> classDiagramList){
@@ -158,6 +187,17 @@ public class XMLUtil {
                     }
 
                 }
+            }
+        }
+
+        return classDiagramList;
+    }
+
+    public static List<ClassDiagram> getNoc(List<ClassDiagram> classDiagramList){
+        for (ClassDiagram cd : classDiagramList) {
+            for (ClassDiagram cdNew : classDiagramList) {
+                if (cd.getId().equals(cdNew.getParentId()))
+                    cd.setNoc(cd.getNoc() + 1);
             }
         }
 
